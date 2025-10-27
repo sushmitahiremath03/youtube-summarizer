@@ -36,9 +36,11 @@ def get_video_id(url):
 
 st.title("🎥 YouTube Video Summarizer (Gemini + Streamlit)")
 
-url = st.text_input("Enter YouTube Video URL:")
+url = st.text_input("🔗 Enter YouTube Video URL:")
+language = st.selectbox("🌐 Choose translation language (optional):", ["None", "Hindi", "Kannada"])
 
-if st.button("Summarize"):
+
+if st.button("✨ Generate Summary"): 
     try:
         video_id = get_video_id(url)
         if video_id:
@@ -59,14 +61,18 @@ if st.button("Summarize"):
 
 
             # Summarize with Gemini
-            st.info("✨ Generating summary using Gemini 2.5 Flash...")
+            st.info(f"✨ Generating summary in {language if language != 'None' else 'English'} using Gemini 2.5 Flash...")
             model = GenerativeModel("gemini-2.5-flash")
 
-            prompt = f"Summarize the following YouTube transcript into concise bullet points:\n{text}"
+            if language != "None":
+                prompt = f"Summarize the following YouTube transcript into concise bullet points in {language}:\n{text}"
+            else:
+                prompt = f"Summarize the following YouTube transcript into concise bullet points:\n{text}"
             response = model.generate_content(prompt)
 
             st.subheader("🧠 Summary")
             st.write(response.text)
+            
 
         else:
             st.warning("⚠️ Please enter a valid YouTube URL.")
